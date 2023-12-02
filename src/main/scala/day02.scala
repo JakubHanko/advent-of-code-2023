@@ -1,48 +1,49 @@
 package aoc.day02
 
-val RED_CAP = 12
-val GREEN_CAP = 13
-val BLUE_CAP = 14
+val CAPS = Map(
+  "red" -> 12,
+  "green" -> 13,
+  "blue" -> 14
+)
 
-def checkValidState(state: String): Boolean =
-  state
-    .split(",")
-    .forall(x =>
-      x.strip().split(" ") match {
-        case Array(n, "green") => n.toInt <= GREEN_CAP
-        case Array(n, "red")   => n.toInt <= RED_CAP
-        case Array(n, "blue")  => n.toInt <= BLUE_CAP
-      }
-    )
+type Colour = String
+case class Cube(color: Colour, count: Int)
+case class Game(id: Int, hands: List[List[Cube]])
 
-def checkValidGame(line: String): Boolean =
-  val gameStates = line.split(":")(1)
-  gameStates.split(";").forall(checkValidState)
+def parseCube(cube: String): Cube =
+  cube match {
+    case s"$value $name" => Cube(color = name, count = value.toInt)
+  }
+
+def parseHands(hands: String): List[List[Cube]] =
+  hands.split("; ").toList.map(_.split(", ").toList.map(parseCube))
+
+def parse(line: String): Game =
+  line match {
+    case s"Game $id: $hands" => Game(id = id.toInt, hands = parseHands(hands))
+  }
+
+def validateGame(game: Game): Boolean =
+  game.hands.forall: hand =>
+    hand.forall:
+      case Cube(color, n) => n <= CAPS.get(color).get
 
 def solve1(input: Iterator[String]): Int =
-  input.zipWithIndex.filter(x => checkValidGame(x._1)).map(_._2 + 1).sum
+  input.map(parse).filter(validateGame).map(_.id).sum
 
-def powerCubes(line: String): Int =
-  val gameStates = line.split(":")(1)
-  gameStates
-    .split(";")
-    .map(x => {
-      x.split(",")
-        .map(x => {
-          x.strip().split(" ") match {
-            case Array(n, "green") => Array(n.toInt, 0, 0)
-            case Array(n, "red")   => Array(0, n.toInt, 0)
-            case Array(n, "blue")  => Array(0, 0, n.toInt)
-          }
-        })
-        .reduce((x, y) => x.zip(y).map { case (x, y) => x + y })
-    })
-    .transpose
-    .map(_.max)
-    .reduceLeft((x, y) => x * y)
+def powerCubes(game: Game): Int =
+  val acc: Map[String, Int] = Map.empty
+  val maxima = game.hands.foldLeft(acc): (map, hand) =>
+    hand.foldLeft(map): (map, cube) =>
+      map.updatedWith(cube.color) {
+        case Some(n) => Some(Math.max(n, cube.count))
+        case None    => Some(cube.count)
+      }
+
+  maxima.values.product
 
 def solve2(input: Iterator[String]): Int =
-  input.map(powerCubes).sum
+  input.map(parse andThen powerCubes).sum
 
 @main def main: Unit =
   println(solve1(aoc.getInput(2)))

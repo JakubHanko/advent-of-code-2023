@@ -64,6 +64,7 @@ def gearNumber(input: Matrix, pos: Position): Set[SchematicNumber] =
     if (numbers.size == 2) numbers else Set()
   }
 
+// alternatively, approach with Vector.sliding(3)?
 def scanSchematic(
     input: Matrix,
     op: (Matrix, Position) => Set[SchematicNumber]

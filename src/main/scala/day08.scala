@@ -14,53 +14,37 @@ def parseMaps(input: Iterator[String]): Map[String, LeftRight] =
       case s"$from = ($left, $right)" => map + (from -> (left, right))
     }
 
+def countSteps(
+    instructions: String,
+    map: Map[String, LeftRight],
+    endCondition: String => Boolean
+)(start: String): Long =
+  // foldWhileLeft
+  val path = LazyList
+    .continually(instructions)
+    .flatten
+    .scanLeft(start): (state, instr) =>
+      if instr == 'L' then map(state)._1 else map(state)._2
+    .takeWhile(state => !endCondition(state))
+
+  path.size
+
 def solve1(input: Iterator[String]): Long =
   val instructions = getInstructions(input)
   val map = parseMaps(input.drop(1))
 
-  // foldWhileLeft
-  val path = Iterator
-    .continually(instructions)
-    .flatten
-    .scanLeft("AAA"): (state, instr) =>
-      if instr == 'L' then map(state)._1 else map(state)._2
-    .takeWhile(state => state != "ZZZ")
-
-  path.size
+  countSteps(instructions, map, _ == "ZZZ")("AAA")
 
 def gcd(a: Long, b: Long): Long = if (b == 0) a.abs else gcd(b, a % b)
 def lcm(a: Long, b: Long): Long = (a.abs * b.abs) / gcd(a, b)
 
-case class State(name: String, numberOfHits: Long, cycleLength: Option[Long])
-
-// doesn't work in general case. Need to consider the case they are not already synchronised
 def solve2(input: Iterator[String]): Long =
   val instructions = getInstructions(input)
   val map = parseMaps(input.drop(1))
-  var state = map.keySet
+  var states = map.keySet
     .filter(_.endsWith("A"))
-    .map(s => State(name = s, numberOfHits = 0, cycleLength = None))
-  println(state)
 
-  val path = Iterator
-    .continually(instructions)
-    .flatten
-    .scanLeft(state): (state, instr) =>
-      state.map: (s) =>
-        val newState = if instr == 'L' then map(s.name)._1 else map(s.name)._2
-        val numberOfHits =
-          if (newState.endsWith("Z")) s.numberOfHits + 1 else s.numberOfHits
-        val cycleLength =
-          if (numberOfHits == 1) s.cycleLength |+| Some(1) else s.cycleLength
-
-        State(
-          name = newState,
-          numberOfHits = numberOfHits,
-          cycleLength = cycleLength
-        )
-    .takeWhile(_.exists(state => state.numberOfHits < 2))
-
-  path.toList.last.map(_.cycleLength).flatten.reduceLeft(lcm)
+  states.map(countSteps(instructions, map, _.endsWith("Z"))).reduceLeft(lcm)
 
 @main def main: Unit =
   println(solve1(aoc.getInput(8)))

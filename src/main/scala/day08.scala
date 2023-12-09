@@ -1,13 +1,13 @@
 package aoc.day08
 import cats.implicits._
 
-type LeftRight = (String, String)
+type Options = (String, String)
 
 def getInstructions(input: Iterator[String]): String =
   input.take(1).toList.head
 
-def parseMaps(input: Iterator[String]): Map[String, LeftRight] =
-  val map: Map[String, LeftRight] = Map.empty
+def parseMaps(input: Iterator[String]): Map[String, Options] =
+  val map: Map[String, Options] = Map.empty
 
   input.foldLeft(map): (map, line) =>
     line match {
@@ -16,7 +16,7 @@ def parseMaps(input: Iterator[String]): Map[String, LeftRight] =
 
 def countSteps(
     instructions: String,
-    map: Map[String, LeftRight],
+    map: Map[String, Options],
     endCondition: String => Boolean
 )(start: String): Long =
   // foldWhileLeft

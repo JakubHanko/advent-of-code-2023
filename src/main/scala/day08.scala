@@ -33,6 +33,7 @@ def lcm(a: Long, b: Long): Long = (a.abs * b.abs) / gcd(a, b)
 
 case class State(name: String, numberOfHits: Long, cycleLength: Option[Long])
 
+// doesn't work in general case. Need to consider the case they are not already synchronised
 def solve2(input: Iterator[String]): Long =
   val instructions = getInstructions(input)
   val map = parseMaps(input.drop(1))

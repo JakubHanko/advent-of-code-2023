@@ -14,6 +14,7 @@ def parseMaps(input: Iterator[String]): Map[String, Options] =
       case s"$from = ($left, $right)" => map + (from -> (left, right))
     }
 
+// TODO: doesn't work in general case when the cycles are not synchronised from the get go
 def countSteps(
     instructions: String,
     map: Map[String, Options],

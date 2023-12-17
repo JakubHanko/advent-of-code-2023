@@ -24,6 +24,7 @@ case class Mapping(range: SeedRange, to: Seed) {
     else None
 
   def apply(n: Seed): Seed = to + n - range.start
+
   def apply(r: SeedRange): (Option[SeedRange], List[SeedRange]) =
     getIntersect(r) match
       case None => (None, List(r))

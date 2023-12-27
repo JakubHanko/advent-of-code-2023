@@ -48,3 +48,6 @@ import aoc._
   println("  Day 15: Lens Library")
   println(s"    ├ Solution #1: ${timed(day15.solve1(getInput(15)))}")
   println(s"    └ Solution #2: ${timed(day15.solve2(getInput(15)))}")
+  println("  Day 16: The Floor Will Be Lava")
+  println(s"    ├ Solution #1: ${timed(day16.solve1(getInput(16)))}")
+  println(s"    └ Solution #2: ${timed(day16.solve2(getInput(16)))}")

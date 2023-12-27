@@ -15,6 +15,7 @@ val V_SPLITTER = '|'
 val H_SPLITTER = '-'
 
 val START = (0, 0)
+// TODO: look into using complex numbers to represent position + orientation
 val INITIAL_ORIENTATION = Orientation.East
 
 enum Orientation:

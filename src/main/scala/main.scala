@@ -42,3 +42,6 @@ import aoc._
   println("  Day 13: Point of Incidence")
   println(s"    ├ Solution #1: ${timed(day13.solve1(getInput(13)))}")
   println(s"    └ Solution #2: ${timed(day13.solve2(getInput(13)))}")
+  println("  Day 14: Parabolic Reflector Dish")
+  println(s"    ├ Solution #1: ${timed(day14.solve1(getInput(14)))}")
+  println(s"    └ Solution #2: ${timed(day14.solve2(getInput(14)))}")

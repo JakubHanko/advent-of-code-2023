@@ -76,13 +76,16 @@ def scanSchematic(
     if !numbers.isEmpty
   } yield numbers
 
-def solve1(input: Matrix): Int =
-  scanSchematic(input, partNumber).distinct.flatten.map(s => s.value).sum
+def solve1(input: Iterator[String]): Int =
+  val matrix = input.map(_.toIndexedSeq).toIndexedSeq
+  scanSchematic(matrix, partNumber).distinct.flatten.map(s => s.value).sum
 
-def solve2(input: Matrix): Int =
-  scanSchematic(input, gearNumber).distinct.map(x => x.map(_.value).product).sum
+def solve2(input: Iterator[String]): Int =
+  val matrix = input.map(_.toIndexedSeq).toIndexedSeq
+  scanSchematic(matrix, gearNumber).distinct
+    .map(x => x.map(_.value).product)
+    .sum
 
 @main def main: Unit =
-  val input: Matrix = aoc.getInput(3).map(_.toIndexedSeq).toIndexedSeq
-  println(solve1(input))
-  println(solve2(input))
+  println(solve1(aoc.getInput(3)))
+  println(solve2(aoc.getInput(3)))

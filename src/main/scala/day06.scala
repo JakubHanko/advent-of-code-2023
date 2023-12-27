@@ -23,18 +23,18 @@ def countPossibilities(time: Long, distance: Long): Long =
 
   (x2.floor - x1.ceil + 1).toLong
 
-def solve1(input: List[String]): Long =
-  val (times, distances) = (parse1(input(0)), parse1(input(1)))
+def solve1(input: Iterator[String]): Long =
+  val (times, distances) = (parse1(input.next()), parse1(input.next()))
   times
     .zip(distances)
     .map(countPossibilities)
     .product
 
-def solve2(input: List[String]): Long =
-  val (time, distance) = (parse2(input(0)), parse2(input(1)))
+def solve2(input: Iterator[String]): Long =
+  val (time, distance) = (parse2(input.next()), parse2(input.next()))
 
   countPossibilities(time, distance)
 
 @main def main: Unit =
-  println(solve1(aoc.getInput(6).toList))
-  println(solve2(aoc.getInput(6).toList))
+  println(solve1(aoc.getInput(6)))
+  println(solve2(aoc.getInput(6)))
